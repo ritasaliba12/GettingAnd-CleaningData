@@ -1,4 +1,5 @@
 
+
 #download samsung data
 url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(url, destfile = "./assignment4.zip")
@@ -47,10 +48,15 @@ all <- cbind(meanstd,labels,subject)
 
 #merge activity lables
 datatouse<-merge(all,activity,by = "V1")
+head(datatouse)
+colnames(datatouse)[ncol(datatouse)] <- ("activity")
 #get mean according to different varibales
-meandata <- aggregate(datatouse[,1:(ncol(all)-2)],by=list(all$V1,all$subject), FUN=mean, na.rm=TRUE)
+meandata <- aggregate(datatouse[,2:(ncol(datatouse)-2)],by=list(datatouse$activity,datatouse$subject), FUN=mean, na.rm=TRUE)
+colnames(meandata) <- colnames(meandata, prefix = "mean of")
+colnames(meandata)[3:ncol(meandata)] <- paste("Mean of", colnames(meandata)[3:ncol(meandata)])
 
 #output text file (tidy data)
 write.table(meandata,"./tidydataset.txt",row.names=FALSE)
 nrow(meandata)
 ncol(meandata)
+head(meandata)
